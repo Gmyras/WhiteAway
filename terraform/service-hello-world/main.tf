@@ -21,9 +21,15 @@ resource "aws_ecs_task_definition" "this" {
 [
   {
     "name": "hello_world",
-    "image": "hello-world",
+    "image": "strm/helloworld-http",
     "cpu": 256,
     "memory": 512,
+    "portMappings": [
+      {
+        "containerPort": 80,
+        "protocol": "tcp"
+      }
+    ],    
     "logConfiguration": {
       "logDriver": "awslogs",
       "options": {
