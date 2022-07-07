@@ -3,11 +3,17 @@ resource "aws_cloudwatch_log_group" "this" {
   retention_in_days = 1
 }
 
+data "aws_iam_role" "ecs_task_execution_role" {
+  name = "ecsTaskExecutionRole"
+}
+
 # for the example sake I didnt use different versions of the container image per environment.
 resource "aws_ecs_task_definition" "this" {
   family = "hello_world"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
+  task_role_arn            = "${data.aws_iam_role.ecs_task_execution_role.arn}"
+
   container_definitions = <<EOF
 [
   {
@@ -44,3 +50,4 @@ resource "aws_ecs_service" "this" {
   deployment_maximum_percent         = 100
   deployment_minimum_healthy_percent = 0
 }
+
