@@ -59,6 +59,10 @@ resource "aws_ecs_service" "this" {
 
   deployment_maximum_percent         = 100
   deployment_minimum_healthy_percent = 0
+
+  depends_on = [
+    aws_security_group.this
+  ]
 }
 
 resource "aws_security_group" "this" {
