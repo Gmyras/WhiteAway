@@ -1,19 +1,20 @@
 resource "aws_cloudwatch_log_group" "this" {
-  name_prefix       = "hello_world-"
+  name_prefix       = "${terraform.workspace}-hello_world-"
   retention_in_days = 1
 }
 
 # for the example sake I didnt use different versions of the container image per environment.
 resource "aws_ecs_task_definition" "this" {
   family = "hello_world"
-
+  requires_compatibilities = ["FARGATE"]
+  network_mode             = "awsvpc"
   container_definitions = <<EOF
 [
   {
     "name": "hello_world",
     "image": "hello-world",
-    "cpu": 0,
-    "memory": 128,
+    "cpu": 1024,
+    "memory": 512,
     "logConfiguration": {
       "logDriver": "awslogs",
       "options": {
@@ -31,6 +32,12 @@ resource "aws_ecs_service" "this" {
   name            = "hello_world"
   cluster         = var.cluster_id
   task_definition = aws_ecs_task_definition.this.arn
+
+  launch_type = FARGATE
+  network_configuration {
+    subnets = var.subnets_ids
+    assign_public_ip = true
+  }
 
   desired_count = 1
 
