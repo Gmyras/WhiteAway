@@ -39,7 +39,7 @@ resource "aws_ecs_service" "this" {
   cluster         = var.cluster_id
   task_definition = aws_ecs_task_definition.this.arn
 
-  launch_type = FARGATE
+  launch_type = "FARGATE"
   network_configuration {
     subnets = var.subnets_ids
     assign_public_ip = true
@@ -50,4 +50,7 @@ resource "aws_ecs_service" "this" {
   deployment_maximum_percent         = 100
   deployment_minimum_healthy_percent = 0
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7365c1960343491df3c4f34021aeffd7d14658a7
