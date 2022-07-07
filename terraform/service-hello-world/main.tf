@@ -51,7 +51,7 @@ resource "aws_ecs_service" "this" {
   launch_type = "FARGATE"
   network_configuration {
     subnets = var.subnets_ids
-    security_groups = aws_security_group.this.id
+    security_groups = var.sg_id
     assign_public_ip = true
   }
 
@@ -59,28 +59,5 @@ resource "aws_ecs_service" "this" {
 
   deployment_maximum_percent         = 100
   deployment_minimum_healthy_percent = 0
-
-  depends_on = [
-    aws_security_group.this
-  ]
 }
 
-resource "aws_security_group" "this" {
-  name        = "hello_world-${terraform.workspace}"
-  description = "Allow ALL traffic"
-  vpc_id      = var.vpc_id
-  ingress {
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
-  }
-  egress {
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
-  }
-}

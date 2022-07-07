@@ -64,6 +64,25 @@ module "ecs" {
   }
 }
 
+resource "aws_security_group" "this" {
+  name        = "hello_world-${terraform.workspace}"
+  description = "Allow ALL traffic"
+  vpc_id      = var.vpc_id
+  ingress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+  egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+}
 
 module "hello_world" {
   source = "./service-hello-world"
@@ -71,4 +90,5 @@ module "hello_world" {
   vpc_id = module.vpc.vpc_id
   subnets_ids = module.vpc.public_subnets
   cluster_id = module.ecs.cluster_id
+  sg_id = aws_security_group.this.id
 }
