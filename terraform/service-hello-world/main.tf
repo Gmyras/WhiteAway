@@ -33,7 +33,7 @@ resource "aws_ecs_service" "this" {
   cluster         = var.cluster_id
   task_definition = aws_ecs_task_definition.this.arn
 
-  launch_type = FARGATE
+  launch_type = "FARGATE"
   network_configuration {
     subnets = var.subnets_ids
     assign_public_ip = true
